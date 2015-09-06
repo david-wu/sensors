@@ -1,20 +1,43 @@
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
 
-var app = express();
-app.set('port', 3000);
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
+var app = App();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
-var apiRouter = require('./api');
-app.use('/api', apiRouter)
 
-app.listen(app.get('port'), function(){
-    console.log('Server started port: ' + app.get('port'));
+var openSockets = [];
+io.on('connection', function(socket){
+    openSockets.push(socket);
+    console.log('user connected: ', openSockets.map(function(d){return d.id;}))
+    socket.on('textChange', function(val){
+        for(var i = 0; i < openSockets.length; i++){
+            if(openSockets[i] === socket){continue;}
+            openSockets[i].emit('textChange', val);
+        }
+    })
+    socket.on('disconnect', function(){
+        if(openSockets.indexOf(socket) !== -1){
+            openSockets.splice(openSockets.indexOf(socket), 1);
+        }
+     });
 });
 
-var Mocker = require('./mocker')
-var mocker = new Mocker();
-setInterval(mocker.post.bind(mocker), 1000);
 
+
+
+
+
+
+server.listen(5000, function(){
+    console.log('Server started port: ' + 5000);
+});
+
+function App(){
+    var app = require('express')();
+    var bodyParser = require('body-parser');
+    var apiRouter = require('./api');
+
+    app.use(bodyParser.urlencoded({extended:true}));
+    app.use(bodyParser.json());
+    app.use('/api', apiRouter);
+    return app;
+}

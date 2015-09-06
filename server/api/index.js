@@ -8,5 +8,13 @@ api.post('/data', function(req, res){
     res.end();
 })
 
+api.get('/', function(req, res){
+    console.log('received get to api/data: ', req.body);
+    res.write(JSON.stringify({
+        message: 'helloo'
+    }));
+    res.end();
+})
+
 
 module.exports = api;
