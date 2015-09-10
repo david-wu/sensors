@@ -5,61 +5,89 @@ var ContextMenu = require('./contextMenu.js');
 
 var Dashboard = React.createClass({
     getInitialState: function(){
-
         return {
-            widgets:[
-              {
-                title: 'Source',
-                body: '',
-                style: {
-                    visible: true,
-                }
-              },
-              {w: 1, h: 2, x: 0, y: 1},
-              {w: 2, h: 2, x: 1, y: 0},
-              {w: 1, h: 1, x: 1, y: 2},
-            ],
+            models: [],
             contextMenu: {
                 visible: false,
                 pageX: 0,
-                pageY: 0,
-                options: [{}, {}, {}],
+                pageY: 0
             }
+        };
+    },
+    // addSource: function(){
+    //     this.setState(function(prevState){
+    //         prevState.models.push(new Source());
+    //         return prevState;
+    //     });
+    // },
+    // addTransform: function(){
+    //     this.setState(function(prevState){
+    //         prevState.models.push(new Transform());
+    //         return prevState;
+    //     });
+    // },
+    // addClient: function(){
+    //     var model = new Client();
+    //     this.setState(function(prevState){
+    //         prevState.models.push(new Client());
+    //         return prevState;
+    //     });
+    // },
+    addModel: function(model){
+        model = model || {};
+        this.setState(function(prevState){
+            prevState.models.push(model);
+            return prevState;
+        });
+        return model;
+    },
+    removeModel: function(model){
+        var modelIndex = this.state.models.indexOf(model);
+        if(modelIndex !== -1){
+            this.setState(function(prevState){
+                prevState.models.splice(modelIndex, 1);
+                return prevState;
+            });
         }
     },
-    componentDidMount: function(){
-
-    },
     handleClick: function(event){
-        // event.preventDefault();
-        console.log(event)
-    },
-    handleContextMenu: function(event){
         event.preventDefault();
-        console.log('right click')
+        this.setState(function(prevState){
+            prevState.contextMenu.visible = false;
+            return prevState;
+        });
+    },
+    handleRightClick: function(event){
+        event.preventDefault();
         var pageX = event.pageX;
         var pageY = event.pageY;
         this.setState(function(prevState, props){
             prevState.contextMenu.pageX = pageX;
             prevState.contextMenu.pageY = pageY;
             prevState.contextMenu.visible = true;
-
-            // prevState.widgets.push({test: 2})
             return prevState;
         });
     },
     render: function() {
-        console.log('rende3r:', this.state)
-
+        var that = this;
         return(
-            <div className="dashboard" onContextMenu={this.handleContextMenu} onClick={this.handleClick}>
+            <div className="dashboard"
+            onContextMenu={this.handleRightClick}
+            onClick={this.handleClick}>
+
                 <h1>Dashboard!</h1>
 
-                {this.state.widgets.map(function(widget){
-                    return <Widget/>
-                })}
+                <div style={{display: 'flex'}}>
+                    {this.state.models.map(function(model){
+                        return <Widget
+                            model={model}
+                            removeModel={that.removeModel.bind(null, model)}/>
+                    })}
+                </div>
 
-                <ContextMenu state={this.state.contextMenu}/>
+                <ContextMenu
+                    state = {this.state.contextMenu}
+                    addModel = {that.addModel}/>
             </div>
         );
     }
