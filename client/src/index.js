@@ -1,3 +1,4 @@
+_ = require('lodash');
 // /*
 //     Controller
 //     Single DataSets for all charts
@@ -39,8 +40,8 @@
 // console.log('faafasdff')
 
 
-var Socket = require('./services/resources/socket.js')
-var s1 = new Socket();
+var s1 = require('./services/resources/socket.js')
+// var s1 = new Socket();
 s1.setKey('sampleKey');
 
 
