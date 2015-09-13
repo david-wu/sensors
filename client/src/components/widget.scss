@@ -3,6 +3,34 @@ body {
     background-color: grey;
 }
 
+.connector{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+
+    &:hover{
+        width:20px;
+        height: 20px;
+    }
+
+    &.parent{
+        background-color: purple;
+        top: 50%;
+        left: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    &.child{
+        background-color: yellow;
+        top: 50%;
+        right: 0;
+        transform: translate(50%, -50%);
+    }
+
+}
+
+
 .dashboard{
     background-color: black;
     height: 100%;
@@ -12,6 +40,14 @@ body {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+.draggable{
+    cursor: move;
+}
+
+.overflow-hidden{
+    overflow: hidden;
 }
 
 .widget{
@@ -25,10 +61,10 @@ body {
     display: flex;
     flex-direction: column;
     // margin: 15px 15px 15px 15px;
-    overflow: hidden;
+    // overflow: hidden;
     border-radius: 4px;
     box-shadow: 0 2px 2px rgba(0, 0, 0, .05);
-    font-size: 12px;
+    font-size: 14px;
 
     &.unclickable{
         pointer-events: none;
@@ -55,6 +91,8 @@ body {
     }
 
     .card-body{
+        display: flex;
+        flex-direction: column;
         flex: 1;
         padding: 5px 5px 5px 5px;
     }

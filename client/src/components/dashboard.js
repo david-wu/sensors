@@ -14,25 +14,6 @@ var Dashboard = React.createClass({
             }
         };
     },
-    // addSource: function(){
-    //     this.setState(function(prevState){
-    //         prevState.models.push(new Source());
-    //         return prevState;
-    //     });
-    // },
-    // addTransform: function(){
-    //     this.setState(function(prevState){
-    //         prevState.models.push(new Transform());
-    //         return prevState;
-    //     });
-    // },
-    // addClient: function(){
-    //     var model = new Client();
-    //     this.setState(function(prevState){
-    //         prevState.models.push(new Client());
-    //         return prevState;
-    //     });
-    // },
     addModel: function(model){
         model = model || {};
         this.setState(function(prevState){
@@ -44,9 +25,10 @@ var Dashboard = React.createClass({
     removeModel: function(model){
         var modelIndex = this.state.models.indexOf(model);
         if(modelIndex !== -1){
-            this.setState(function(prevState){
-                prevState.models.splice(modelIndex, 1);
-                return prevState;
+            var newModels = this.state.models.slice();
+            newModels.splice(modelIndex,1);
+            this.setState({
+                models: newModels
             });
         }
     },
@@ -70,26 +52,33 @@ var Dashboard = React.createClass({
     },
     render: function() {
         var that = this;
-        return(
-            <div className="dashboard"
-            onContextMenu={this.handleRightClick}
-            onClick={this.handleClick}>
+
+        var modelElements = this.state.models.map(function(model){
+            return <Widget {...{
+                model: model,
+                removeModel: that.removeModel.bind(null, model)
+            }}/>;
+        })
+
+        var reactComponent = (
+            <div {...{
+                className: "dashboard",
+                onClick: this.handleClick,
+                onContextMenu: this.handleRightClick,
+            }}>
 
                 <h1>Dashboard!</h1>
 
-                <div style={{display: 'flex'}}>
-                    {this.state.models.map(function(model){
-                        return <Widget
-                            model={model}
-                            removeModel={that.removeModel.bind(null, model)}/>
-                    })}
-                </div>
+                    {modelElements}
 
-                <ContextMenu
-                    state = {this.state.contextMenu}
-                    addModel = {that.addModel}/>
+                <ContextMenu {...{
+                    state: this.state.contextMenu,
+                    addModel: this.addModel
+                }}/>
             </div>
         );
+
+        return reactComponent;
     }
 });
 
