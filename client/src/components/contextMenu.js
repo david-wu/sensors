@@ -8,13 +8,22 @@ var ContextMenu = React.createClass({
         return this.props.state;
     },
     createSource: function(){
-        this.props.addModel(new Source())
+        this.props.addModel(new Source({
+            pageX: this.state.pageX,
+            pageY: this.state.pageY,
+        }))
     },
     createTransform: function(){
-        this.props.addModel(new Transform())
+        this.props.addModel(new Transform({
+            pageX: this.state.pageX,
+            pageY: this.state.pageY,
+        }))
     },
     createClient: function(){
-        this.props.addModel(new Client())
+        this.props.addModel(new Client({
+            pageX: this.state.pageX,
+            pageY: this.state.pageY,
+        }))
     },
 
     render: function() {

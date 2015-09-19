@@ -55,8 +55,9 @@ var Dashboard = React.createClass({
 
         var modelElements = this.state.models.map(function(model){
             return <Widget {...{
+                key: model.id,
                 model: model,
-                removeModel: that.removeModel.bind(null, model)
+                removeModel: that.removeModel.bind(null, model),
             }}/>;
         })
 

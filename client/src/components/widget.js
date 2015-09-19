@@ -4,14 +4,15 @@ var Widget = React.createClass({
     getInitialState: function(){
         return {
             model: this.props.model,
-            pageX: 0,
-            pageY: 0,
+            pageX: this.props.model.pageX,
+            pageY: this.props.model.pageY,
             visible: true
         };
     },
     componentDidMount: function(){
         var that = this;
-        var model = this.state.model;
+        var model = this.props.model;
+
         if(model.type === 'source'){
             model.sync()
                 .then(function(){
@@ -20,6 +21,8 @@ var Widget = React.createClass({
         }
     },
     setLatestDatum: function(res){
+        var that;
+        this.props.model.latestDatum = res
         this.setState(function(prevState){
             prevState.model.latestDatum = res;
             return prevState
@@ -65,16 +68,16 @@ var Widget = React.createClass({
                     className: 'card-header draggable',
                     onMouseDown: this.mouseDownHandler,
                 }}>
-                    <div>{this.state.model.name}</div>
+                    <div>{this.props.model.name}</div>
                     <div onClick={this.props.removeModel}>x</div>
                 </div>
 
                 <div className="card-body">
-                    <div>host: {this.state.model.address}</div>
-                    <div>Port: {this.state.model.port}</div>
-                    <div>call method: {this.state.model.method}</div>
-                    <div>Interval: {this.state.model.interval}</div>
-                    <div className="overflow-hidden">debug: {JSON.stringify(this.state.model.latestDatum)}</div>
+                    <div>host: {this.props.model.address}</div>
+                    <div>Port: {this.props.model.port}</div>
+                    <div>call method: {this.props.model.method}</div>
+                    <div>Interval: {this.props.model.interval}</div>
+                    <div className="overflow-hidden">debug: {JSON.stringify(this.props.model.latestDatum)}</div>
                 </div>
 
                 <div className="connector parent"></div>

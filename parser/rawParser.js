@@ -4,7 +4,7 @@ function testData(){
     return JSON.stringify([{
         "0": [rand()],
         "1": [rand()]
-    }, rand()])
+    }, rand()]);
 }
 
 function rand(){
@@ -18,41 +18,64 @@ function rand(){
 // Create dataSets
 var dataSets = [];
 for(var i = 0; i < 10; i++){
-    dataSets.push(testData())
+    var data = testData();
+    console.log(data)
+    dataSets.push(data.split(''));
 }
-console.log(dataSets)
+
+
+
 
 var initialSet = dataSets[0];
 var delimeters = [];
 
+var chars = {};
+
+var lastDelimeterIndex = 0;
+var validDelimeter;
+
 // goes over each char in initialSet
 for(var i = 0; i < initialSet.length; i++){
 
+    chars[initialSet[i]] = true;
+    validDelimeter = true;
+
     // Goes over each other dataSet
     var delimeterDistance = 0;
-    for(var j = 1; j < dataSets.length; j++){
 
-        for(var k=i; k < dataSets[j].length; k++){
-            if(dataSets[j][k] !== initialSet[i]){
-                delimeterDistance++;
-            }else{
+    for(var j = 1; j < dataSets.length; j++){
+        for(var k=lastDelimeterIndex; k < dataSets[j].length; k++){
+            if(chars[dataSets[j][k]]){
                 break;
             }
-
-            if(k === dataSets[j].length-1){delimeterDistance = Infinity}
+            if(!chars[dataSets[j][k]] && k === dataSets[j].length-1){
+                validDelimeter = false;
+            }
         }
     }
-    if(!delimeterDistance){
-        delimeters.push(initialSet[i]);
-    }else{
-        delimeters.push([delimeterDistance, initialSet[i]])
+
+    if(validDelimeter){
+        delimeters.push(initialSet[i])
+        chars = {};
+        lastDelimeterIndex = i;
     }
-
-
+    // console.log(chars)
 }
 
-function isDelimeter(){
 
-}
 
-console.log(delimeters)
+
+
+console.log('delimeters', delimeters.join(''))
+
+
+
+
+
+
+
+
+
+
+
+
