@@ -1,4 +1,10 @@
 _ = require('lodash');
+
+var React = require('react');
+var context = document.getElementById('content');
+var Dashboard = require('./components/dashboard.js');
+React.render(<Dashboard/>, context);
+
 // /*
 //     Controller
 //     Single DataSets for all charts
@@ -40,15 +46,10 @@ _ = require('lodash');
 // console.log('faafasdff')
 
 
-var s1 = require('./services/resources/socket.js')
+// var s1 = require('./services/resources/socket.js')
 // var s1 = new Socket();
-s1.setKey('sampleKey');
+// s1.setKey('sampleKey');
 
-
-var React = require('react');
-var context = document.getElementById('content');
-var Dashboard = require('./components/dashboard.js');
-React.render(<Dashboard/>, context);
 
 // var editorContext = document.getElementById('editor')
 // var editor = ace.edit(editorContext)

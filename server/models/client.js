@@ -1,10 +1,11 @@
 var http = require('http');
-
+var qHttp = require("q-io/http");
 
 function Client(socket){
     Client.all.push(this);
     this.socket = socket;
     this.intervals = [];
+    this.requests = [];
 
     socket.on('disconnect', this.disconnectHandler.bind(this));
     socket.on('syncSource', this.syncSourceHandler.bind(this));
@@ -20,36 +21,48 @@ Client.prototype.disconnectHandler = function(){
     }
 }
 
-Client.prototype.syncSourceHandler = function(sourceJso, callback){
+Client.prototype.syncSourceHandler = function(sourceJson, callback){
     var that = this;
-    sourceJso.id = sourceJso.id || guid();
-    callback(sourceJso);
-    that.makeCall(sourceJso);
+
+    // Echos back json with an id
+    sourceJson.id = sourceJson.id || guid();
+    callback(sourceJson);
+
+    that.makeCall(sourceJson);
+
     var interval = setInterval(function(){
-        that.makeCall(sourceJso);
-    }, sourceJso.interval)
+        that.makeCall(sourceJson);
+    }, sourceJson.interval)
+
     this.intervals.push(interval);
-
 }
 
-Client.prototype.makeCall = function(sourceJso){
+Client.prototype.makeCall = function(sourceJson){
     var that = this;
-    console.log('calling')
-    http.get(sourceJso.address, function(res){
-        var body = '';
-        res.on('data', function(d) {
-            body += d;
-        });
-        res.on('end', function() {
-            that.socket.emit(sourceJso.id, {
-                timestamp: Date.now(),
-                data: JSON.parse(body)
-            });
-        });
-    });
-}
 
-function guid() {
+    var requestObject = {
+        url: sourceJson.address
+    };
+    this.requests.push(requestObject)
+
+    return qHttp.read(requestObject)
+
+        // Emits response through socket
+        .then(function(buffer){
+            that.socket.emit(sourceJson.id, {
+                timestamp: Date.now(),
+                data: buffer.toString()
+            });
+        })
+
+        // Remove request from requests array
+        .then(function(){
+            var index = that.requests.indexOf(requestObject);
+            that.requests.splice(index,1);
+        })
+};
+
+function guid(){
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)

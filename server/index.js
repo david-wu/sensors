@@ -1,3 +1,6 @@
+// Globals
+_ = require('lodash');
+Q = require('q');
 
 var app = App();
 var server = require('http').createServer(app);

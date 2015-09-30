@@ -1,3 +1,4 @@
+var React = require('react');
 
 function Client(options){
     _.extend(this, options)
@@ -11,4 +12,13 @@ function Client(options){
     });
 
 }
+
+Client.prototype.renderElement = function(){
+    return(
+        <div>
+            Client
+        </div>
+    )
+}
+
 module.exports = Client;

@@ -16,21 +16,21 @@ var Dashboard = React.createClass({
     },
     addModel: function(model){
         model = model || {};
-        this.setState(function(prevState){
-            prevState.models.push(model);
-            return prevState;
+        var newModels = this.state.models.slice();
+        newModels.push(model);
+        this.setState({
+            models: newModels,
         });
         return model;
     },
     removeModel: function(model){
         var modelIndex = this.state.models.indexOf(model);
-        if(modelIndex !== -1){
-            var newModels = this.state.models.slice();
-            newModels.splice(modelIndex,1);
-            this.setState({
-                models: newModels
-            });
-        }
+        if(modelIndex === -1){return;}
+        var newModels = this.state.models.slice();
+        newModels.splice(modelIndex,1);
+        this.setState({
+            models: newModels
+        });
     },
     handleClick: function(event){
         event.preventDefault();
