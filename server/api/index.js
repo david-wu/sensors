@@ -1,7 +1,7 @@
 var express = require('express');
-var DatumStreaum = require('../services/datum_stream.js')
 var api = express();
-
+var MClient = require('../services/mongo_client.js');
+var mClient = new MClient();
 
 api.post('/data', function(req, res){
     console.log('received post to api/data: ', req.body);
@@ -13,6 +13,19 @@ api.get('/', function(req, res){
     res.write(JSON.stringify({
         message: 'helloo'
     }));
+
+    mClient.connect()
+        .then(function(db){
+            console.log(db);
+            // db.
+
+
+
+
+
+
+        });
+
     res.end();
 })
 

@@ -2,19 +2,23 @@
 _ = require('lodash');
 Q = require('q');
 
+var QHttp = require('q-io/http');
+var IO = require('socket.io');
+var Client = require('./models/client.js');
+
 var app = App();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+// var server = QHttp.Server(app);
+var server = require('http').createServer(app)
+var io = IO(server);
 
 // Creates new Clients when a socket connection is made
-var Client = require('./models/client.js');
 io.on('connection', function(socket){
     var client = new Client(socket);
 })
 
-
-server.listen(5000, function(){
-    console.log('Server started port: ' + 5000);
+var port = 5000;
+server.listen(port, function(){
+    console.log('Server started port: ' + port);
 });
 
 function App(){
