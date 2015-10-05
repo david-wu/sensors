@@ -1,3 +1,4 @@
+var React = require('react');
 var Socket = require('../services/resources/socket.js');
 
 function Transform(options){
@@ -12,9 +13,17 @@ function Transform(options){
         input: [],
         outputs: []
     });
+}
+
+Transform.prototype.init = function(){
 
 }
 
+Transform.prototype.body = function(){
+    return (<div>
+        This is a Transform
+    </div>);
+}
 
 Transform.prototype.apply = function(res){
     return eval('('+that.fnString+')')(res)

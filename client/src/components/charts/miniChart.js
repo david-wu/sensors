@@ -5,6 +5,8 @@ function MiniChart(context){
 
 }
 
+
+
 MiniChart.prototype.setData = function(){
 
 }

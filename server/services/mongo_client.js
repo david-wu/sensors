@@ -1,4 +1,5 @@
-var MongoClient = require('mongodb').MongoClient;
+var MongoDb = require('mongodb');
+var MongoClient = MongoDb.MongoClient;
 var Q = require('q');
 var _ = require('lodash');
 
@@ -10,6 +11,7 @@ function MClient(options){
 }
 
 MClient.prototype.connect = function(){
+    return MongoClient.connect(this.url);
     var that = this;
     var deferred = Q.defer();
 
@@ -18,7 +20,7 @@ MClient.prototype.connect = function(){
             deferred.reject(err);
         }else{
             that._db = db;
-            deferred.resolve(this);
+            deferred.resolve(that);
         }
     });
 
@@ -29,4 +31,49 @@ MClient.prototype.ensureIndex = function(){
 
 }
 
+MClient.prototype.createCollection = function(){
+    var deferred = Q.defer();
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+
+    args.push(function(err, collection){
+        if(err){
+            deferred.reject(err);
+        }else{
+            deferred.resolve(collection);
+        }
+    });
+
+    this._db.createCollection.apply(this._db, args);
+    return deferred.promise;
+}
+
+// function Qify(obj, func){
+//     obj = obj || this;
+//     return function(){
+//         var deferred = Q.defer();
+
+//         var args = [];
+//         for (var i = 0; i < arguments.length; i++) {
+//             args.push(arguments[i]);
+//         }
+
+//         args.push(function(err, res){
+//             if(err){
+//                 deferred.reject(err);
+//             }else{
+//                 deferred.resolve(res);
+//             }
+//         });
+
+//         func.apply(obj, args);
+//         return deferred;
+//     }
+// }
+
+
 module.exports = MClient;
+
+

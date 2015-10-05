@@ -10,15 +10,7 @@ var Widget = React.createClass({
         };
     },
     componentDidMount: function(){
-        var that = this;
-        var model = this.props.model;
-
-        if(model.type === 'source'){
-            model.sync()
-                .then(function(){
-                    model.startListening(that.setLatestDatum.bind(that));
-                });
-        }
+        this.props.model.init(this);
     },
     setLatestDatum: function(res){
         var that;
@@ -73,11 +65,7 @@ var Widget = React.createClass({
                 </div>
 
                 <div className="card-body">
-                    <div>host: {this.props.model.address}</div>
-                    <div>Port: {this.props.model.port}</div>
-                    <div>call method: {this.props.model.method}</div>
-                    <div>Interval: {this.props.model.interval}</div>
-                    <div className="overflow-hidden">debug: {JSON.stringify(this.props.model.latestDatum)}</div>
+                    {this.props.model.body()}
                 </div>
 
                 <div className="connector parent"></div>

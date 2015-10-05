@@ -16,15 +16,16 @@ api.get('/', function(req, res){
 
     mClient.connect()
         .then(function(db){
-            console.log(db);
-            // db.
+            return db.createCollection('test');
+        })
+        .then(function(collection){
+            // console.log('collection',collection)
+            return collection.insert({test:123});
+        })
+        .then(function(res){
+            console.log('res', res);
+        })
 
-
-
-
-
-
-        });
 
     res.end();
 })

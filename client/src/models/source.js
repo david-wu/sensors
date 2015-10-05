@@ -1,7 +1,7 @@
+var React = require('react');
 var Socket = require('../services/resources/socket.js');
 
 function Source(options){
-    var that = this;
     _.extend(this, options);
     _.defaults(this, {
         type: 'source',
@@ -19,17 +19,38 @@ function Source(options){
 
 }
 
+Source.prototype.init = function(){
+    var that = this;
+    this.sync()
+        .then(function(){
+            that.startListening(function(res){
+                that.latestDatum = res;
+            });
+        });
+}
+
+Source.prototype.body = function(){
+    return (<div>
+        This is a Source
+        <div>Host: {this.address}</div>
+        <div>Port: {this.port}</div>
+        <div>Call method: {this.method}</div>
+        <div>Interval: {this.interval}</div>
+        <div className="overflow-hidden">debug: {JSON.stringify(this.latestDatum)}</div>
+    </div>);
+}
+
 // Returns a promise that resolves when server replies with the model's Id
 Source.prototype.sync = function(){
     var that = this;
     return Socket.connect()
         .then(function(socket){
-            return new Promise(function(resolve, reject){
-                socket.emit('syncSource', that.form(), function(form){
-                    that.loadInForm(form);
-                    resolve(form);
-                });
+            var deferred = Q.defer();
+            socket.emit('syncSource', that.form(), function(form){
+                that.loadInForm(form);
+                deferred.resolve(form);
             });
+            return deferred;
         });
 };
 
