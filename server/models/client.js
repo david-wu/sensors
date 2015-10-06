@@ -8,7 +8,7 @@ function Client(socket){
     this.requests = [];
 
     socket.on('disconnect', this.disconnectHandler.bind(this));
-    socket.on('syncSource', this.syncSourceHandler.bind(this));
+    socket.on('syncModel', this.syncModelHandler.bind(this));
 }
 
 Client.all = [];
@@ -16,32 +16,37 @@ Client.all = [];
 Client.prototype.disconnectHandler = function(){
     var index = Client.all.indexOf(this);
     Client.all.splice(index, 1);
-    for(var i = 0; i < this.intervals.length; i++){
-        clearInterval(this.intervals[i]);
-    }
+    _.each(this.intervals, function(interval){
+        clearInterval(interval);
+    });
 }
 
-Client.prototype.syncSourceHandler = function(sourceJson, callback){
+Client.prototype.syncModelHandler = function(modelJson, callback){
     var that = this;
 
     // Echos back json with an id
-    sourceJson.id = sourceJson.id || guid();
-    callback(sourceJson);
+    modelJson.id = modelJson.id || guid();
+    callback(modelJson);
 
-    that.makeCall(sourceJson);
+    if(modelJson.type === 'source'){
+        this.beginCalling(modelJson);
+    }
+}
 
+Client.prototype.beginCalling = function(modelJson){
+    var that = this;
+    this.makeCall(modelJson);
     var interval = setInterval(function(){
-        that.makeCall(sourceJson);
-    }, sourceJson.interval)
-
+        that.makeCall(modelJson);
+    }, modelJson.interval)
     this.intervals.push(interval);
 }
 
-Client.prototype.makeCall = function(sourceJson){
+Client.prototype.makeCall = function(modelJson){
     var that = this;
 
     var requestObject = {
-        url: sourceJson.address
+        url: modelJson.address
     };
     this.requests.push(requestObject)
 
@@ -49,7 +54,7 @@ Client.prototype.makeCall = function(sourceJson){
 
         // Emits response through socket
         .then(function(buffer){
-            that.socket.emit(sourceJson.id, {
+            that.socket.emit(modelJson.id, {
                 timestamp: Date.now(),
                 data: buffer.toString()
             });

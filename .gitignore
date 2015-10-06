@@ -3,3 +3,5 @@ node_modules
 ./server/node_modules
 ./ideas.txt
 .DS_Store
+.gitconfig
+./client/build
