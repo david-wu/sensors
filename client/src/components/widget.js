@@ -10,7 +10,8 @@ var Widget = React.createClass({
         };
     },
     componentDidMount: function(){
-        this.props.model.init(this);
+        console.log('init')
+        // this.props.model.init(this);
     },
     setLatestDatum: function(res){
         var that;

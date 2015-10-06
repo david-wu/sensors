@@ -55,9 +55,9 @@ var Dashboard = React.createClass({
 
         var modelElements = this.state.models.map(function(model){
             return <Widget {...{
-                key: model.id,
                 model: model,
-                removeModel: that.removeModel.bind(null, model),
+                key: model.id,
+                removeModel: that.removeModel.bind(that, model),
             }}/>;
         })
 
@@ -70,7 +70,7 @@ var Dashboard = React.createClass({
 
                 <h1>Dashboard!</h1>
 
-                    {modelElements}
+                {modelElements}
 
                 <ContextMenu {...{
                     state: this.state.contextMenu,

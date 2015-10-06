@@ -8,22 +8,25 @@ var ContextMenu = React.createClass({
         return this.props.state;
     },
     createSource: function(){
-        this.props.addModel(new Source({
-            pageX: this.state.pageX,
-            pageY: this.state.pageY,
-        }))
+        return new Source(this.location())
+            .sync()
+            .then(this.props.addModel);
     },
     createTransform: function(){
-        this.props.addModel(new Transform({
-            pageX: this.state.pageX,
-            pageY: this.state.pageY,
-        }))
+        return new Transform(this.location())
+            .sync()
+            .then(this.props.addModel);
     },
     createClient: function(){
-        this.props.addModel(new Client({
+        return new Client(this.location())
+            .sync()
+            .then(this.props.addModel);
+    },
+    location: function(){
+        return {
             pageX: this.state.pageX,
-            pageY: this.state.pageY,
-        }))
+            pageY: this.state.pageY
+        };
     },
 
     render: function() {

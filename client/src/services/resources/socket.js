@@ -22,8 +22,8 @@ Socket.prototype.connect = function(){
             resolve(connection);
         });
         connection.on('connect_error', function(err){
-            reject(err);
             that.connection = undefined;
+            reject(err);
         });
     });
     return this.connection;

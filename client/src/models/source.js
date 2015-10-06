@@ -1,5 +1,5 @@
+var Model = require('./_model.js');
 var React = require('react');
-var Socket = require('../services/resources/socket.js');
 
 function Source(options){
     _.extend(this, options);
@@ -16,22 +16,25 @@ function Source(options){
         },
         outputs: []
     });
-
 }
+
+Source.prototype = Object.create(Model.prototype);
 
 Source.prototype.init = function(){
     var that = this;
-    this.sync()
+    return this.sync()
         .then(function(){
-            that.startListening(function(res){
+            var stopListening = that.startListening(function(res){
                 that.latestDatum = res;
             });
+            return stopListening;
         });
 }
 
 Source.prototype.body = function(){
     return (<div>
-        This is a Source
+        <div>id: {this.id}</div>
+        <div>type: {this.type}</div>
         <div>Host: {this.address}</div>
         <div>Port: {this.port}</div>
         <div>Call method: {this.method}</div>
@@ -39,48 +42,5 @@ Source.prototype.body = function(){
         <div className="overflow-hidden">debug: {JSON.stringify(this.latestDatum)}</div>
     </div>);
 }
-
-// Returns a promise that resolves when server replies with the model's Id
-Source.prototype.sync = function(){
-    var that = this;
-    return Socket.connect()
-        .then(function(socket){
-            var deferred = Q.defer();
-            socket.emit('syncSource', that.form(), function(form){
-                that.loadInForm(form);
-                deferred.resolve(form);
-            });
-            return deferred;
-        });
-};
-
-Source.prototype.startListening = function(callback){
-    var that = this;
-    Socket.connect()
-        .then(function(socket){
-            socket.on(that.id, callback);
-        });
-};
-
-Source.prototype.stopListening = function(callback){
-    var that = this;
-    Socket.connect()
-        .then(function(socket){
-            socket.on(that.id, callback);
-        });
-};
-
-Source.prototype.form = function(){
-    return {
-        id: this.id,
-        name: this.name,
-        address: this.address,
-        interval: this.interval
-    };
-};
-
-Source.prototype.loadInForm = function(form){
-    _.extend(this, form);
-};
 
 module.exports = Source;

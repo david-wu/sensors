@@ -1,6 +1,5 @@
 var d3 = require('d3');
 
-
 function PicoChart(context){
     console.log('pico', context);
 
@@ -41,10 +40,14 @@ PicoChart.prototype.movingDiv = function(){
 PicoChart.prototype.beginGraph = function(){
     var that = this;
     var movingDiv = this.movingDiv();
-    setInterval(function(){
+    var shiftInverval = setInterval(function(){
         that.xOffset[0]--;
-        movingDiv.style('-webkit-transform', 'translate3d('+that.xOffset[0]+'px,0,0)');
-    },16)
+        movingDiv.style('-webkit-transform', 'translate3d(' + that.xOffset[0] + 'px,0,0)');
+    }, 16);
+
+    return function(){
+        clearInterval(shiftInverval);
+    };
 
 }
 
@@ -54,11 +57,11 @@ PicoChart.prototype.movingSvg = function(){
         .data([0]);
 
     movingSvg.enter()
-        .append('svg')
+        .append('svg');
 
     movingSvg
         .attr('width', 300)
-        .attr('height', 300)
+        .attr('height', 300);
 
     movingSvg.exit()
         .remove();
