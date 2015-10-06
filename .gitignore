@@ -1,7 +1,11 @@
-node_modules
-./client/node_modules
-./server/node_modules
-./ideas.txt
 .DS_Store
-.gitconfig
-./client/build
+
+logs
+*.log
+npm-debug.log*
+
+node_modules
+/client/node_modules
+/server/node_modules
+/client/build
+
