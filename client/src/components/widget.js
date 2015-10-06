@@ -10,15 +10,14 @@ var Widget = React.createClass({
         };
     },
     componentDidMount: function(){
-        console.log('init')
-        // this.props.model.init(this);
+        this.props.model.init(this);
     },
     setLatestDatum: function(res){
         var that;
         this.props.model.latestDatum = res
         this.setState(function(prevState){
             prevState.model.latestDatum = res;
-            return prevState
+            return prevState;
         });
     },
     componentWillUnmount: function(){
@@ -30,8 +29,8 @@ var Widget = React.createClass({
         var downPos = [e.pageX, e.pageY];
         var currPos = [this.state.pageX, this.state.pageY];
 
-        document.body.addEventListener('mousemove', mouseMoveHandler)
-        document.body.addEventListener('mouseup', mouseUpHandler)
+        document.body.addEventListener('mousemove', mouseMoveHandler);
+        document.body.addEventListener('mouseup', mouseUpHandler);
 
         function mouseMoveHandler(e){
             that.setState({

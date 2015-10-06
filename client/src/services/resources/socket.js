@@ -13,9 +13,9 @@ Socket.prototype.setKey = function(key){
 };
 
 Socket.prototype.connect = function(){
-    var that = this;
     if(this.connection){return this.connection;}
 
+    var that = this;
     this.connection = new Promise(function(resolve, reject){
         var connection = io.connect(that.url);
         connection.on('connect', function(){
@@ -26,13 +26,23 @@ Socket.prototype.connect = function(){
             reject(err);
         });
     });
+
     return this.connection;
 };
 
 Socket.prototype.disconnect = function(){
 };
 
-Socket.prototype.syncSource = function(){
+Socket.prototype.syncModel = function(form){
+    return this.connect()
+        .then(function(){
+            return new Promise(function(resolve, reject){
+                socket.emit('syncModel', form, function(res){
+                    that.loadInForm(res);
+                    resolve(that);
+                });
+            });
+        })
 
 }
 

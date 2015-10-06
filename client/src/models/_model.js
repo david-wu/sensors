@@ -14,8 +14,8 @@ Model.prototype.sync = function(){
     return Socket.connect()
         .then(function(socket){
             return new Promise(function(resolve, reject){
-                socket.emit('syncModel', that.form(), function(form){
-                    that.loadInForm(form);
+                socket.emit('syncModel', that.form(), function(res){
+                    that.loadInForm(res);
                     resolve(that);
                 });
             });

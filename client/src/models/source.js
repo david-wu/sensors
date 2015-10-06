@@ -24,23 +24,24 @@ Source.prototype.init = function(){
     var that = this;
     return this.sync()
         .then(function(){
-            var stopListening = that.startListening(function(res){
+            return that.startListening(function(res){
                 that.latestDatum = res;
             });
-            return stopListening;
         });
 }
 
 Source.prototype.body = function(){
-    return (<div>
-        <div>id: {this.id}</div>
-        <div>type: {this.type}</div>
-        <div>Host: {this.address}</div>
-        <div>Port: {this.port}</div>
-        <div>Call method: {this.method}</div>
-        <div>Interval: {this.interval}</div>
-        <div className="overflow-hidden">debug: {JSON.stringify(this.latestDatum)}</div>
-    </div>);
+    return (
+        <div>
+            <div>id: {this.id}</div>
+            <div>type: {this.type}</div>
+            <div>Host: {this.address}</div>
+            <div>Port: {this.port}</div>
+            <div>Call method: {this.method}</div>
+            <div>Interval: {this.interval}</div>
+            <div className="overflow-hidden">debug: {JSON.stringify(this.latestDatum)}</div>
+        </div>
+    );
 }
 
 module.exports = Source;
