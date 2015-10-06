@@ -22,7 +22,6 @@ gulp.task('buildJs', function() {
         .pipe(buffer())
         .pipe(uglify())
         .pipe(concat('bundle.min.js'))
-        .pipe(gulp.dest('./build/test.js'));
 });
 
 // Compiles scss files
