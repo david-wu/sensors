@@ -15,21 +15,17 @@ var Dashboard = React.createClass({
         };
     },
     addModel: function(model){
-        model = model || {};
-        var newModels = this.state.models.slice();
-        newModels.push(model);
-        this.setState({
-            models: newModels,
+        this.setState(function(prevState){
+            prevState.models.push(model);
+            return prevState;
         });
-        return model;
     },
     removeModel: function(model){
-        var modelIndex = this.state.models.indexOf(model);
-        if(modelIndex === -1){return;}
-        var newModels = this.state.models.slice();
-        newModels.splice(modelIndex,1);
-        this.setState({
-            models: newModels
+        var that = this;
+        this.setState(function(prevState){
+            var modelIndex = that.state.models.indexOf(model);
+            prevState.models.splice(modelIndex, 1);
+            return prevState;
         });
     },
     handleClick: function(event){

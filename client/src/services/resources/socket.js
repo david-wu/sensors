@@ -1,10 +1,10 @@
 
 var Resource = require('./_resource.js');
+var io = require('socket.io-client');
 
 function Socket(options){
     Resource.call(this);
     this.url = 'http://localhost:5000';
-
 }
 
 Socket.prototype = Object.create(Resource.prototype);
@@ -35,16 +35,18 @@ Socket.prototype.disconnect = function(){
 
 Socket.prototype.syncModel = function(form){
     return this.connect()
-        .then(function(){
+        .then(function(socket){
             return new Promise(function(resolve, reject){
                 socket.emit('syncModel', form, function(res){
-                    that.loadInForm(res);
-                    resolve(that);
+                    if(res.err){
+                        reject(res.err)
+                    }else{
+                        resolve(res);
+                    }
                 });
             });
-        })
-
-}
+        });
+};
 
 Socket.prototype.join = function(roomName){
 

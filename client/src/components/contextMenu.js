@@ -7,6 +7,7 @@ var ContextMenu = React.createClass({
     getInitialState: function(){
         return this.props.state;
     },
+
     createSource: function(){
         return new Source(this.location())
             .sync()

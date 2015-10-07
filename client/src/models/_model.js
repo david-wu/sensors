@@ -11,14 +11,10 @@ Model.prototype.init = function(){
 // Returns a promise that resolves when server replies with the model's Id
 Model.prototype.sync = function(){
     var that = this;
-    return Socket.connect()
-        .then(function(socket){
-            return new Promise(function(resolve, reject){
-                socket.emit('syncModel', that.form(), function(res){
-                    that.loadInForm(res);
-                    resolve(that);
-                });
-            });
+    return Socket.syncModel(this.form())
+        .then(function(res){
+            that.loadInForm(res);
+            return that;
         });
 };
 
