@@ -18,13 +18,9 @@ Model.prototype.sync = function(){
         });
 };
 
-Model.prototype.startListening = function(callback){
+Model.prototype.startListening = function(callback, destroyPromise){
     var that = this;
-    Socket.connect()
-        .then(function(socket){
-            socket.on(that.id, callback);
-        });
-    return this.stopListening.bind(this, callback);
+    return Socket.on(this.id, callback, destroyPromise);
 };
 
 Model.prototype.stopListening = function(callback){

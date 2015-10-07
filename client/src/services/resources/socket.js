@@ -9,9 +9,6 @@ function Socket(options){
 
 Socket.prototype = Object.create(Resource.prototype);
 
-Socket.prototype.setKey = function(key){
-};
-
 Socket.prototype.connect = function(){
     if(this.connection){return this.connection;}
 
@@ -45,6 +42,22 @@ Socket.prototype.syncModel = function(form){
                     }
                 });
             });
+        });
+};
+
+Socket.prototype.on = function(key, callback, destroyPromise){
+    return this.connect()
+        .then(function(socket){
+            socket.on(key, callback);
+
+            function removeListener(){
+                socket.removeListener(key, callback);
+            }
+
+            if(destroyPromise){
+                destroyPromise.then(removeListener);
+            }
+            return removeListener;
         });
 };
 
