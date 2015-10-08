@@ -3,14 +3,14 @@ var MongoClient = MongoDb.MongoClient;
 var Q = require('q');
 var _ = require('lodash');
 
-function MClient(options){
+function Mongo(options){
     _.extend(this, options);
     _.defaults(this, {
         url: 'mongodb://localhost:27017/sensors'
     });
 }
 
-MClient.prototype.connect = function(){
+Mongo.prototype.connect = function(){
     return MongoClient.connect(this.url);
     var that = this;
     var deferred = Q.defer();
@@ -27,11 +27,11 @@ MClient.prototype.connect = function(){
     return deferred.promise;
 };
 
-MClient.prototype.ensureIndex = function(){
+Mongo.prototype.ensureIndex = function(){
 
 }
 
-MClient.prototype.createCollection = function(){
+Mongo.prototype.createCollection = function(){
     var deferred = Q.defer();
     var args = [];
     for (var i = 0; i < arguments.length; i++) {
@@ -74,6 +74,6 @@ MClient.prototype.createCollection = function(){
 // }
 
 
-module.exports = MClient;
+module.exports = Mongo;
 
 
