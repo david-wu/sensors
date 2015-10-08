@@ -3,6 +3,7 @@
 logs
 *.log
 npm-debug.log*
+.gitconfig
 
 node_modules
 /client/node_modules
